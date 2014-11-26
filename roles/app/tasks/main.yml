@@ -1,0 +1,53 @@
+---
+- name: setup dir
+  file: >
+    dest={{ app_home }}
+    state=directory
+    owner={{ app_user }}
+
+- name: install redis
+  yum: >
+    name=redis
+    state=installed
+
+- name: ensure redis is started
+  service: >
+    name=redis
+    state=started
+
+- name: install yas3fs
+  command: pip install yas3fs
+
+- name: configure yas3fs
+  command: sed -i'' 's/^# *user_allow_other/user_allow_other/' /etc/fuse.conf
+
+- name: set correct permissions on yas3fs
+  file: >
+    dest=/etc/fuse.conf
+    mode=0644
+
+- name: setup tracks dir
+  file: >
+    dest={{ app_tracks }}
+    state=directory
+    owner={{ app_user }}
+  with_items:
+    - "app"
+
+- name: mount yas3fs
+  command: yas3fs --nonempty {{ app_tracks_bucket }}  {{ app_tracks }}
+  environment:
+    AWS_ACCESS_KEY_ID: {{ lookup('env', 'S3_ACCESS_KEY_ID') }}
+    AWS_SECRET_ACCESS_KEY: {{ lookup('env', 'S3_SECRET_ACCESS_KEY') }}
+
+- name: setup conf
+  template: >
+    src=app.service.j2
+    dest=/etc/systemd/system/app.service
+
+- name: setup permissions
+  file: >
+    dest=/srv/{{ app_user }}
+    owner={{ app_user }}
+    group={{ app_user }}
+    recurse=yes

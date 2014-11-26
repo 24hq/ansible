@@ -1,0 +1,21 @@
+---
+- include: "nginx.yml"
+
+- name: setup dir
+  file: >
+    dest={{ web_home }}
+    state=directory
+    owner={{ app_user }}
+
+- name: setup conf
+  template: >
+    src=web.service.j2
+    dest=/etc/systemd/system/web.service
+
+- name: install web app dependencies
+  yum: >
+    name={{ item }}
+    state=latest
+  with_items:
+    - libpng-devel
+    - bzip2

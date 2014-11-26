@@ -1,0 +1,32 @@
+---
+- hosts: "tag_web*"
+  sudo: yes
+  sudo_user: "{{ app_user }}"
+  tasks:
+    - name: stop web app
+      service: >
+        name=web
+        state=stopped
+      sudo_user: root
+
+    - name: clone web app
+      git: >
+        repo=https://github.com/learnerdicious/html5-sceleton.git
+        dest={{ web_home }}/web_app
+        update=yes
+
+    - name: install npm modules
+      command: npm install
+      args:
+        chdir: "{{ web_home }}/web_app"
+        
+    - name: install bower modules
+      command: bower install
+      args:
+        chdir: "{{ web_home }}/web_app"
+
+    - name: start web app
+      service: >
+        name=web
+        state=started
+      sudo_user: root

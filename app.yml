@@ -1,0 +1,6 @@
+- hosts: "tag_app*"
+  sudo: yes
+  roles:
+    - common
+    - jdk
+    - app

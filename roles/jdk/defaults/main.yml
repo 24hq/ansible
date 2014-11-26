@@ -1,0 +1,4 @@
+---
+download_url: http://download.oracle.com/otn-pub/java/jdk/8u25-b17/jdk-8u25-linux-x64.rpm
+download_folder: /var/tmp
+java_archive: "{{ download_folder }}/jdk-8u25-linux-x64.rpm"

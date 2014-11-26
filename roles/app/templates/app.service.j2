@@ -1,0 +1,16 @@
+[Unit]
+Description=learnerd server
+
+[Service]
+Restart=always
+Type=simple
+User={{ app_user }}
+Group={{ app_user }}
+ExecStart=/{{ app_home }}/bin/app
+Environment="JAVA_OPTS=-Dtrack.rootDir=file://{{ app_tracks }}"
+
+# Give a reasonable amount of time for the server to start up/shut down
+TimeoutSec=300
+
+[Install]
+WantedBy=multi-user.target

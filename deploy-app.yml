@@ -1,0 +1,36 @@
+---
+- hosts: "tag_app*"
+  sudo: yes
+  sudo_user: "{{ app_user }}"
+  tasks:
+    - name: stop app
+      service: >
+        name=app
+        state=stopped
+      sudo_user: root
+
+    - name: remove libs, bin
+      file: >
+        path={{ app_home }}/{{ item }}
+        state=directory
+        force=yes
+        recurse=true
+      with_items:
+        - "lib"
+        - "bin"
+
+    - name: copy
+      copy: >
+        src={{ item }}
+        dest=/var/tmp/app.tar
+      with_fileglob:
+        - "/home/centos/app-jars/build/distributions/app-*.tar"
+
+    - name: deploy
+      command: tar -C {{ app_home }}/ --strip-components=1 -xf /var/tmp/app.tar
+
+    - name: start app
+      service: >
+        name=app
+        state=started
+      sudo_user: root

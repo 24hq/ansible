@@ -1,0 +1,22 @@
+upstream webapi {
+  {% for host in groups['tag_app_'] %}
+  server {{ hostvars[host]['ansible_eth0']['ipv4']['address'] }}:{{ app_port }};
+  {% endfor %}
+}
+
+upstream web {
+  {% for host in groups['tag_web_'] %}
+  server {{ hostvars[host]['ansible_eth0']['ipv4']['address'] }}:{{ web_port }};
+  {% endfor %}
+}
+
+server {
+  listen 80;
+
+  location / {
+    proxy_pass http://web/;
+  }
+  location /api/ {
+    proxy_pass http://webapi/api/;
+  }
+}

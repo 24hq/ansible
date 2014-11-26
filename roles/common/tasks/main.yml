@@ -1,0 +1,38 @@
+---
+- name: setup app user
+  user: >
+    name={{ app_user }}
+
+- name: bootstrap epel-release install
+  copy: >
+    src=ansible-bootstrap-epel.repo
+    dest=/etc/yum.repos.d/
+    owner=root group=root mode=0644
+
+- name: epel-release install
+  yum: >
+   name=epel-release
+   enablerepo=ansible-bootstrap-epel
+   state=present
+
+- name: epel repository enable
+  ini_file: >
+    dest=/etc/yum.repos.d/epel.repo
+    section=epel
+    option=enabled
+    value=1
+
+- name: install packages
+  yum: >
+    name={{ item }}
+  with_items:
+    - wget
+    - telnet
+    - vim
+    - screen
+    - git
+    - curl
+    - fuse
+    - fuse-libs
+    - python-pip
+    - unzip
