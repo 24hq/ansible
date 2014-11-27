@@ -5,3 +5,7 @@ app_tracks: "{{ app_home }}/tracks"
 app_tracks_bucket: "s3://learnerd-tracks/"
 web_user: "web"
 web_home: "/srv/{{ web_user }}"
+
+jdbc_url: jdbc:postgresql://learnerd.cqkkrrhynwsl.eu-west-1.rds.amazonaws.com:5432/learnerd
+jdbc_username: learnerd
+jdbc_password: 13arn3rd

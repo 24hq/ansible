@@ -7,7 +7,7 @@ Type=simple
 User={{ app_user }}
 Group={{ app_user }}
 ExecStart=/{{ app_home }}/bin/app
-Environment="JAVA_OPTS=-Dtrack.rootDir=file://{{ app_tracks }}"
+Environment="JAVA_OPTS=-Dtrack.rootDir=file://{{ app_tracks }} -Djdbc.url={{ jdbc_url }} -Djdbc.username={{ jdbc_username }} -Djdbc.password={{ jdbc_password }}"
 
 # Give a reasonable amount of time for the server to start up/shut down
 TimeoutSec=300
