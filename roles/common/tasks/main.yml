@@ -36,3 +36,9 @@
     - fuse-libs
     - python-pip
     - unzip
+
+- name: setup papertrail
+  copy: >
+    src=90-papertrail.conf
+    dest=/etc/rsyslog.d/90-papertrail.conf
+  notify: restart rsyslog
